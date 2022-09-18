@@ -28,6 +28,7 @@ private:
     QOpenGLShaderProgram ProgramBasic;
 
     void InitShaders();
+    void PintInfo();
 
 public:
     explicit MyOpenGLWidget(/*MySpringModel &_sptingModel,*/ QWidget *parent = nullptr);

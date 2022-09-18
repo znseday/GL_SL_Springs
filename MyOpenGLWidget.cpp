@@ -34,6 +34,27 @@ void MyOpenGLWidget::InitShaders()
     }
 }
 
+void MyOpenGLWidget::PintInfo()
+{
+    auto renderer = glGetString(GL_RENDERER);
+    qInfo() << "renderer =" << (const char*)renderer;
+
+    auto vendor = glGetString(GL_VENDOR);
+    qInfo() << "vendor =" << (const char*)vendor;
+
+    auto version = glGetString(GL_VERSION);
+    qInfo() << "version =" << (const char*)version;
+
+    auto glslVersion = glGetString(GL_SHADING_LANGUAGE_VERSION);
+    qInfo() << "glslVersion =" << (const char*)glslVersion;
+
+    GLint major, minor;
+    glGetIntegerv(GL_MAJOR_VERSION, &major);
+    glGetIntegerv(GL_MINOR_VERSION, &minor);
+
+    qInfo() << "glslVersion (int, int) =" << major << "-" << minor;
+}
+
 MyOpenGLWidget::MyOpenGLWidget(/*MySpringModel &_sptingModel,*/ QWidget *parent)
     : QOpenGLWidget(parent)/*, SpringModel(_sptingModel)*/
 {
@@ -97,7 +118,6 @@ void MyOpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 //        angularSpeed += acc;
     }
 
-
     this->update();     // Request an update
 }
 
@@ -110,8 +130,7 @@ void MyOpenGLWidget::initializeGL()
 {
     this->initializeOpenGLFunctions();
 
-
-
+    PintInfo();
 
     SpringModel = new MySpringModel;
     RotMatrix.setToIdentity();
