@@ -9,18 +9,22 @@ CONFIG += c++17 console
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    MyBody.cpp \
     MyOpenGLWidget.cpp \
     MySpringModel.cpp \
     MyTestTriangle.cpp \
+    MyWorldBounds.cpp \
     main.cpp \
     MainWindow.cpp
 
 HEADERS += \
     MainWindow.h \
+    MyBody.h \
     MyOpenGLWidget.h \
     MySpringModel.h \
     MyTestTriangle.h \
-    MyTypes.h
+    MyTypes.h \
+    MyWorldBounds.h
 
 FORMS += \
     MainWindow.ui

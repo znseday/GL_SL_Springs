@@ -4,35 +4,35 @@
 #include <QMouseEvent>
 #include <QApplication>
 
-static constexpr float cRot = 0.2f;
-static constexpr float cTrans = 0.002f;
+static constexpr float cRot = 0.25f;
+static constexpr float cTrans = 0.0025f;
 
-void MyOpenGLWidget::InitShaders()
-{
-    if (!ProgramBasic.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/Vertex_01.vert"))
-    {
-        qCritical() << "addShaderFromSourceFile (Vertex) Failed!";
-        close();
-    }
+//void MyOpenGLWidget::InitShaders()
+//{
+//    if (!ProgramBasic.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/Vertex_01.vert"))
+//    {
+//        qCritical() << "addShaderFromSourceFile (Vertex) Failed!";
+//        close();
+//    }
 
-    if (!ProgramBasic.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/Fragment_01.frag"))
-    {
-        qCritical() << "addShaderFromSourceFile (Fragment) Failed!";
-        close();
-    }
+//    if (!ProgramBasic.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/Fragment_01.frag"))
+//    {
+//        qCritical() << "addShaderFromSourceFile (Fragment) Failed!";
+//        close();
+//    }
 
-    if (!ProgramBasic.link())  // Link shader pipeline
-    {
-        qCritical() << "ProgramBasic.link() Failed!";
-        close();
-    }
+//    if (!ProgramBasic.link())  // Link shader pipeline
+//    {
+//        qCritical() << "ProgramBasic.link() Failed!";
+//        close();
+//    }
 
-    if (!ProgramBasic.bind())  // Bind shader pipeline for use
-    {
-        qCritical() << "ProgramBasic.bind() Failed!";
-        close();
-    }
-}
+//    if (!ProgramBasic.bind())  // Bind shader pipeline for use
+//    {
+//        qCritical() << "ProgramBasic.bind() Failed!";
+//        close();
+//    }
+//}
 
 void MyOpenGLWidget::PintInfo()
 {
@@ -92,6 +92,14 @@ void MyOpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 //        TransX += cTrans*dx;
 //        TransY -= cTrans*dy;
     }
+    else if (QApplication::keyboardModifiers() == Qt::ControlModifier)
+    {
+//        float dAngle = dXY.length() * cRot;
+//        RotationQuaternion = QQuaternion::fromAxisAndAngle({0, 0, 1}, dAngle) * RotationQuaternion;
+
+//        RotMatrix.setToIdentity();
+//        RotMatrix.rotate(RotationQuaternion);
+    }
     else
     {
         float dAngle = dXY.length() * cRot;
@@ -124,6 +132,7 @@ void MyOpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 void MyOpenGLWidget::wheelEvent(QWheelEvent *event)
 {
     Trans += QVector3D(0, 0, event->angleDelta().y() / 700.0f);
+    this->update();
 }
 
 void MyOpenGLWidget::initializeGL()
@@ -134,10 +143,11 @@ void MyOpenGLWidget::initializeGL()
 
     SpringModel = new MySpringModel;
     RotMatrix.setToIdentity();
+    SpringModel->InitShaders();
 
     glClearColor(0, 0, 0, 1);
 
-    InitShaders();
+//    InitShaders();
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -150,11 +160,13 @@ void MyOpenGLWidget::resizeGL(int w, int h)
 
     ProjMatrix.setToIdentity();
     ProjMatrix.perspective(fov, aspect, zNear, zFar);
+
+    SpringModel->InitProjMatrix(ProjMatrix);
 }
 
 void MyOpenGLWidget::paintGL()
 {
-    qDebug() << __PRETTY_FUNCTION__;
+    qDebug() << __PRETTY_FUNCTION__ << "FrameNumber =" << FrameNumber++;
 //    const qreal retinaScale = devicePixelRatio();
 //    qDebug() << "retinaScale =" << retinaScale;
 //    glViewport(0, 0, width() * retinaScale, height() * retinaScale);
@@ -172,11 +184,8 @@ void MyOpenGLWidget::paintGL()
     matrix *= transMatrix;
     matrix *= RotMatrix;
 
-    // Set modelview-projection matrix
-    ProgramBasic.setUniformValue("mvp_matrix", ProjMatrix * matrix);
-
     // Draw cube geometry
 //    geometries->drawCubeGeometry(&program);
 
-    SpringModel->DrawIn3D(&ProgramBasic);
+    SpringModel->DrawIn3D(matrix, nullptr);
 }

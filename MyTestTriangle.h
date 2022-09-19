@@ -12,7 +12,7 @@ public:
 
     // IDrawableIn3D interface
 public:
-    void DrawIn3D(QOpenGLShaderProgram *program) override;
+    void DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program) override;
 };
 
 #endif // MYTESTTRIANGLE_H

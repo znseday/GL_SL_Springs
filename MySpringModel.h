@@ -3,8 +3,10 @@
 
 #include "MyTypes.h"
 #include "MyTestTriangle.h"
+#include "MyWorldBounds.h"
 
 #include <QOpenGLFunctions>
+#include <QOpenGLShaderProgram>
 
 struct ModelSettings
 {
@@ -22,21 +24,32 @@ class MySpringModel : public IDrawableIn3D, protected QOpenGLFunctions
 {
 private:
 
+
 //    MyBody Body;
 //    MySpring SpringX1;
     MyTestTriangle TestTriangle;
+    MyWorldBounds *WorldBounds;
+
+    QMatrix4x4 ProjMatrix;
+
+    QOpenGLShaderProgram ProgramAnyColor;
+    QOpenGLShaderProgram ProgramOneColor;
 
     void MyDrawAxis() const;
 
 public:
-    MySpringModel() = default;
+    MySpringModel();
+    ~MySpringModel();
 
     void InitPhysics(const ModelSettings &ms);
     void NextStep(double dt);
 
+    void InitProjMatrix(const QMatrix4x4 &_projMatrix) {ProjMatrix = _projMatrix;}
+    void InitShaders();
+
     // IDrawableIn3D interface
 public:
-    void DrawIn3D(QOpenGLShaderProgram *program) override;
+    void DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program) override;
 };
 
 #endif // MYSPRINGMODEL_H

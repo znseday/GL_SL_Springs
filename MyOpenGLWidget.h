@@ -25,10 +25,10 @@ private:
     QMatrix4x4 ProjMatrix;
     QMatrix4x4 RotMatrix;
 
-    QOpenGLShaderProgram ProgramBasic;
-
-    void InitShaders();
+//    void InitShaders();
     void PintInfo();
+
+    int FrameNumber = 0;
 
 public:
     explicit MyOpenGLWidget(/*MySpringModel &_sptingModel,*/ QWidget *parent = nullptr);

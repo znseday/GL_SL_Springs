@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/Shaders">
-        <file>Fragment_01.frag</file>
-        <file>Vertex_01.vert</file>
+        <file>fAnyColor.frag</file>
+        <file>vAnyColor.vert</file>
+        <file>fOneColor.frag</file>
+        <file>vOneColor.vert</file>
     </qresource>
 </RCC>

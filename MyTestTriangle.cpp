@@ -2,13 +2,15 @@
 
 #include <QOpenGLShaderProgram>
 
-static constexpr GLfloat vertices[] = {
+static constexpr GLfloat vertices[] =
+{
      0.0f,  0.707f,
     -0.5f, -0.5f,
      0.5f, -0.5f
 };
 
-static constexpr GLfloat colors[] = {
+static constexpr GLfloat colors[] =
+{
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f
@@ -20,8 +22,10 @@ MyTestTriangle::MyTestTriangle()
     this->initializeOpenGLFunctions();
 }
 
-void MyTestTriangle::DrawIn3D(QOpenGLShaderProgram *_program)
+void MyTestTriangle::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *_program)
 {
+    (void)mvMatrix;
+
     GLint m_posAttr = 0;
     GLint m_colAttr = 1;
 
