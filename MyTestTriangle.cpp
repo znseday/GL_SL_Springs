@@ -26,19 +26,19 @@ void MyTestTriangle::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *_progra
 {
     (void)mvMatrix;
 
-    GLint m_posAttr = 0;
-    GLint m_colAttr = 1;
+    constexpr GLint vPositionAttr = 0;
+    constexpr GLint vColorAttr = 1;
 
-    glVertexAttribPointer(m_posAttr, 2, GL_FLOAT, GL_FALSE, 0, vertices);
-    glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, 0, colors);
+    glVertexAttribPointer(vPositionAttr, 2, GL_FLOAT, GL_FALSE, 0, vertices);
+    glVertexAttribPointer(vColorAttr, 3, GL_FLOAT, GL_FALSE, 0, colors);
 
-    glEnableVertexAttribArray(m_posAttr);
-    glEnableVertexAttribArray(m_colAttr);
+    glEnableVertexAttribArray(vPositionAttr);
+    glEnableVertexAttribArray(vColorAttr);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    glDisableVertexAttribArray(m_colAttr);
-    glDisableVertexAttribArray(m_posAttr);
+    glDisableVertexAttribArray(vPositionAttr);
+    glDisableVertexAttribArray(vColorAttr);
 
     (void)_program;
 }

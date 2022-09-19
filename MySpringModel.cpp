@@ -22,9 +22,21 @@ static constexpr GLfloat Axiscolors[] =
     0.0f, 0.0f, 1.0f
 };
 
-void MySpringModel::MyDrawAxis() const
+void MySpringModel::MyDrawAxis()
 {
+    constexpr GLint vPositionAttr = 0;
+    constexpr GLint vColorAttr = 1;
 
+    glVertexAttribPointer(vPositionAttr, 3, GL_FLOAT, GL_FALSE, 0, AxisVertices);
+    glVertexAttribPointer(vColorAttr, 3, GL_FLOAT, GL_FALSE, 0, Axiscolors);
+
+    glEnableVertexAttribArray(vPositionAttr);
+    glEnableVertexAttribArray(vColorAttr);
+
+    glDrawArrays(GL_LINES, 0, 6);
+
+    glDisableVertexAttribArray(vColorAttr);
+    glDisableVertexAttribArray(vPositionAttr);
 }
 
 MySpringModel::MySpringModel()
@@ -32,14 +44,20 @@ MySpringModel::MySpringModel()
     this->initializeOpenGLFunctions();
 
     WorldBounds = new MyWorldBounds(ProjMatrix);
+    Body = new MyBody(ProjMatrix);
 }
 
 MySpringModel::~MySpringModel()
 {
     delete WorldBounds;
+    delete Body;
+
+//    ProgramAnyColor.release(); // ?
+//    ProgramOneColor.release(); // ?
+//    ProgramADSColor.release(); // ?
 }
 
-void MySpringModel::InitPhysics(const ModelSettings &ms)
+void MySpringModel::InitPhysics(const PhyModelSettings &ms)
 {
 
     (void)ms;
@@ -55,13 +73,13 @@ void MySpringModel::InitShaders()
 {
     if (!ProgramAnyColor.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/vAnyColor.vert"))
     {
-        qCritical() << "addShaderFromSourceFile (Vertex) Failed!";
+        qCritical() << "ProgramAnyColor.addShaderFromSourceFile (Vertex) Failed!";
         return;
     }
 
     if (!ProgramAnyColor.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/fAnyColor.frag"))
     {
-        qCritical() << "addShaderFromSourceFile (Fragment) Failed!";
+        qCritical() << "ProgramAnyColor.addShaderFromSourceFile (Fragment) Failed!";
         return;
     }
 
@@ -71,15 +89,16 @@ void MySpringModel::InitShaders()
         return;
     }
 
+
     if (!ProgramOneColor.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/vOneColor.vert"))
     {
-        qCritical() << "addShaderFromSourceFile (Vertex) Failed!";
+        qCritical() << "ProgramOneColor.addShaderFromSourceFile (Vertex) Failed!";
         return;
     }
 
     if (!ProgramOneColor.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/fOneColor.frag"))
     {
-        qCritical() << "addShaderFromSourceFile (Fragment) Failed!";
+        qCritical() << "ProgramOneColor.addShaderFromSourceFile (Fragment) Failed!";
         return;
     }
 
@@ -89,11 +108,24 @@ void MySpringModel::InitShaders()
         return;
     }
 
-//    if (!ProgramBasic.bind())  // Bind shader pipeline for use
-//    {
-//        qCritical() << "ProgramBasic.bind() Failed!";
-//        return;
-//    }
+
+    if (!ProgramADSColor.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/vADSColor.vert"))
+    {
+        qCritical() << "ProgramADSColor.addShaderFromSourceFile (Vertex) Failed!";
+        return;
+    }
+
+    if (!ProgramADSColor.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/fADSColor.frag"))
+    {
+        qCritical() << "ProgramADSColor.addShaderFromSourceFile (Fragment) Failed!";
+        return;
+    }
+
+    if (!ProgramADSColor.link())  // Link shader pipeline
+    {
+        qCritical() << "ProgramADSColor.ProgramOneColor.link() Failed!";
+        return;
+    }
 }
 
 void MySpringModel::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
@@ -107,29 +139,28 @@ void MySpringModel::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
     }
 
     ProgramAnyColor.setUniformValue("mvp_matrix", ProjMatrix * mvMatrix);
-
-    GLint m_posAttr = 0;
-    GLint m_colAttr = 1;
-
-    glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, AxisVertices);
-    glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, 0, Axiscolors);
-
-    glEnableVertexAttribArray(m_posAttr);
-    glEnableVertexAttribArray(m_colAttr);
-
-    glDrawArrays(GL_LINES, 0, 6);
-
-    glDisableVertexAttribArray(m_colAttr);
-    glDisableVertexAttribArray(m_posAttr);
-
+    MyDrawAxis();
     TestTriangle.DrawIn3D(mvMatrix, &ProgramAnyColor);
+
 
     if (!ProgramOneColor.bind())  // Bind shader pipeline for use
     {
         qCritical() << "ProgramOneColor.bind() Failed!";
         return;
     }
-
     WorldBounds->DrawIn3D(mvMatrix, &ProgramOneColor);
+
+    if (!ProgramADSColor.bind())  // Bind shader pipeline for use
+    {
+        qCritical() << "ProgramADSColor.bind() Failed!";
+        return;
+    }
+
+    ProgramADSColor.setUniformValue("Light.Position", mvMatrix*Light.Position);
+    ProgramADSColor.setUniformValue("Light.La", Light.La);
+    ProgramADSColor.setUniformValue("Light.Ld", Light.Ld);
+    ProgramADSColor.setUniformValue("Light.Ls", Light.Ls);
+
+    Body->DrawIn3D(mvMatrix, &ProgramADSColor);
 }
 

@@ -4,5 +4,7 @@
         <file>vAnyColor.vert</file>
         <file>fOneColor.frag</file>
         <file>vOneColor.vert</file>
+        <file>fADSColor.frag</file>
+        <file>vADSColor.vert</file>
     </qresource>
 </RCC>

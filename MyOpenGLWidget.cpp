@@ -64,7 +64,6 @@ MyOpenGLWidget::MyOpenGLWidget(/*MySpringModel &_sptingModel,*/ QWidget *parent)
 MyOpenGLWidget::~MyOpenGLWidget()
 {
     makeCurrent();
-//    delete texture;
     delete SpringModel;
     doneCurrent();
 }
@@ -175,6 +174,7 @@ void MyOpenGLWidget::paintGL()
 
     QMatrix4x4 matrix;
     matrix.translate(0.0, 0.0, -4.0);
+//    qDebug() << matrix;
 //    matrix.rotate(RotationQuaternion);
 
     QMatrix4x4 transMatrix;
@@ -183,9 +183,6 @@ void MyOpenGLWidget::paintGL()
 
     matrix *= transMatrix;
     matrix *= RotMatrix;
-
-    // Draw cube geometry
-//    geometries->drawCubeGeometry(&program);
 
     SpringModel->DrawIn3D(matrix, nullptr);
 }

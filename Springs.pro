@@ -11,6 +11,7 @@ CONFIG += c++17 console
 SOURCES += \
     MyBody.cpp \
     MyOpenGLWidget.cpp \
+    MySphere.cpp \
     MySpringModel.cpp \
     MyTestTriangle.cpp \
     MyWorldBounds.cpp \
@@ -21,6 +22,7 @@ HEADERS += \
     MainWindow.h \
     MyBody.h \
     MyOpenGLWidget.h \
+    MySphere.h \
     MySpringModel.h \
     MyTestTriangle.h \
     MyTypes.h \
