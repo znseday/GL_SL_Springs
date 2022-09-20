@@ -20,7 +20,7 @@ class MyBody : public IDrawableIn3D, public MySphere, protected QOpenGLFunctions
 {
 private:
     Pos3d CenterPos;
-//    float BodyRadius = 0.07f; // Поэкспериментировать с разными значениями, проверить нормали (освещение)
+
     double m = 1.0;
 
     QVector3D V;
@@ -30,9 +30,8 @@ private:
 
     MaterialInfo Material;
 
-    QOpenGLBuffer BufferVAO;
-    QOpenGLBuffer BufferIndecies;
-//    QOpenGLVertexArrayObject VAO;
+    QOpenGLBuffer BufferBodyVerticies;
+    QOpenGLBuffer BufferBodyIndecies;
 
 public:
     MyBody(QMatrix4x4 &_projMatrix);

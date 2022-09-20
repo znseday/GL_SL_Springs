@@ -6,6 +6,7 @@
 #include "MyWorldBounds.h"
 #include "MyBody.h"
 #include "MySpring.h"
+#include "MyBodyTrace.h"
 
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
@@ -24,15 +25,23 @@ class MySpringModel : public IDrawableIn3D, protected QOpenGLFunctions
 {
 private:
 
-    MyBody *Body;
+    MyBody Body;
+//    MySpring *SpringX1, *SpringX2,
+//             *SpringY1, *SpringY2,
+//             *SpringZ1, *SpringZ2;
+
     MySpring SpringX1, SpringX2,
              SpringY1, SpringY2,
              SpringZ1, SpringZ2;
 
-    std::list<Pos3d> Trace;
+    MyBodyTrace BodyTrace;
+
+//    std::list<Pos3d> TraceList;
+//    std::vector<float> TraceVertices;
+//    QOpenGLBuffer BufferTraceVertices;
 
     MyTestTriangle TestTriangle;
-    MyWorldBounds *WorldBounds;
+    MyWorldBounds WorldBounds;
 
     QMatrix4x4 ProjMatrix;
 
@@ -53,6 +62,8 @@ public:
 
     void InitProjMatrix(const QMatrix4x4 &_projMatrix) {ProjMatrix = _projMatrix;}
     void InitShaders();
+
+
 
     // IDrawableIn3D interface
 public:

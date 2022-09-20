@@ -52,7 +52,6 @@ static constexpr GLfloat WorldVerticesCrossLineLoops[] =
 };
 //-------------------------------------------------------------
 
-
 MyWorldBounds::MyWorldBounds(QMatrix4x4 &_projMatrix)
     : ProjMatrix(_projMatrix)
 {

@@ -40,7 +40,7 @@ MyOpenGLWidget::~MyOpenGLWidget()
 {
     makeCurrent();
     delete SpringModel;
-    MySpring::DestroyBufferVAO();
+    MySpring::DestroyBufferSpringVertices();
     doneCurrent();
 }
 //-------------------------------------------------------------
@@ -53,7 +53,9 @@ void MyOpenGLWidget::InitPhysics(const PhyModelSettings &ms)
 
 void MyOpenGLWidget::NextStep(double dt)
 {
+//    this->makeCurrent();
     SpringModel->NextStep(dt);
+//    this->doneCurrent();
     this->update();
 }
 //-------------------------------------------------------------
@@ -135,7 +137,7 @@ void MyOpenGLWidget::initializeGL()
 
     SpringModel = new MySpringModel;
 
-    MySpring::InitBufferVAO();
+    MySpring::InitBufferSpringVertices();
 
     RotMatrix.setToIdentity();
     SpringModel->InitShaders();

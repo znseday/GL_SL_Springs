@@ -10,6 +10,7 @@ CONFIG += c++17 console
 
 SOURCES += \
     MyBody.cpp \
+    MyBodyTrace.cpp \
     MyOpenGLWidget.cpp \
     MySphere.cpp \
     MySpring.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 HEADERS += \
     MainWindow.h \
     MyBody.h \
+    MyBodyTrace.h \
     MyOpenGLWidget.h \
     MySphere.h \
     MySpring.h \

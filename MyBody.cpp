@@ -3,20 +3,20 @@
 #include <QOpenGLShaderProgram>
 
 MyBody::MyBody(QMatrix4x4 &_projMatrix)
-    : MySphere(1.0, 128, 128), ProjMatrix(_projMatrix), BufferIndecies(QOpenGLBuffer::IndexBuffer)
+    : MySphere(0.1, 128, 128), ProjMatrix(_projMatrix), BufferBodyIndecies(QOpenGLBuffer::IndexBuffer)
 {
     this->initializeOpenGLFunctions();
 
     // Create Buffer (Do not release until VAO is created)
-    BufferVAO.create();
-    BufferVAO.bind();
-    BufferVAO.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    BufferVAO.allocate(InterleavedVertices.data(), InterleavedVertices.size()*sizeof(float));
+    BufferBodyVerticies.create();
+    BufferBodyVerticies.bind();
+    BufferBodyVerticies.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    BufferBodyVerticies.allocate(InterleavedVertices.data(), InterleavedVertices.size()*sizeof(float));
 
-    BufferIndecies.create();
-    BufferIndecies.bind();
-    BufferIndecies.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    BufferIndecies.allocate(Indices.data(), Indices.size()*sizeof(unsigned));
+    BufferBodyIndecies.create();
+    BufferBodyIndecies.bind();
+    BufferBodyIndecies.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    BufferBodyIndecies.allocate(Indices.data(), Indices.size()*sizeof(unsigned));
 
     // Create Vertex Array Object
 //    VAO.create();
@@ -28,12 +28,12 @@ MyBody::~MyBody()
 {
     // Release (unbind) all
 //    VAO.release();
-    BufferVAO.release();
-    BufferIndecies.release();
+    BufferBodyVerticies.release();
+    BufferBodyIndecies.release();
 
 //    VAO.destroy();
-    BufferVAO.destroy();
-    BufferIndecies.destroy();
+    BufferBodyVerticies.destroy();
+    BufferBodyIndecies.destroy();
 }
 //-------------------------------------------------------------
 
@@ -55,7 +55,7 @@ void MyBody::NextStep(double dt, const QVector3D &_F)
 void MyBody::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
 {
     mvMatrix.translate(CenterPos);
-    mvMatrix.scale(0.1);
+//    mvMatrix.scale(Radius);
 //    mvMatrix.scale(1.0, 0.2, 1.0);
 
 //    program->setUniformValue("Material", Material);
@@ -78,13 +78,12 @@ void MyBody::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
     constexpr GLint vTexAttr = 2;
 
     // v v v  n n n  t t
-    BufferVAO.bind();
-    BufferIndecies.bind();
+    BufferBodyVerticies.bind();
+    BufferBodyIndecies.bind();
 
     program->enableAttributeArray(vPositionAttr);
     program->enableAttributeArray(vNormalAttr);
     program->enableAttributeArray(vTexAttr);
-
 
     program->setAttributeBuffer(vPositionAttr, GL_FLOAT, 0, 3, InterleavedStride);
     program->setAttributeBuffer(vNormalAttr, GL_FLOAT, 3*sizeof(float), 3, InterleavedStride);
@@ -95,8 +94,8 @@ void MyBody::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
     glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, nullptr); // using BufferIndecies
 //    VAO.release();
 
-    BufferVAO.release();
-    BufferIndecies.release();
+    BufferBodyVerticies.release();
+    BufferBodyIndecies.release();
 
     program->disableAttributeArray(vPositionAttr);
     program->disableAttributeArray(vNormalAttr);

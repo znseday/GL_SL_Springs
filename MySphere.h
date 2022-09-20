@@ -33,6 +33,8 @@ protected:
 public:
     MySphere(float _radius = 1.0f, int _sectorCount = 36, int _stackCount = 18);
     ~MySphere() = default;
+
+    const float & GetRadius() const {return Radius;}
 };
 
 

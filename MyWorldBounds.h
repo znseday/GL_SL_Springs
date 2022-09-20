@@ -7,9 +7,11 @@
 
 class MyWorldBounds : public IDrawableIn3D, protected QOpenGLFunctions
 {
+private:
+    const QMatrix4x4 &ProjMatrix;
+
 public:
     MyWorldBounds(QMatrix4x4 &_projMatrix);
-    const QMatrix4x4 &ProjMatrix;
 
     // IDrawableIn3D interface
 public:
