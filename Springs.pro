@@ -12,6 +12,7 @@ SOURCES += \
     MyBody.cpp \
     MyOpenGLWidget.cpp \
     MySphere.cpp \
+    MySpring.cpp \
     MySpringModel.cpp \
     MyTestTriangle.cpp \
     MyWorldBounds.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     MyBody.h \
     MyOpenGLWidget.h \
     MySphere.h \
+    MySpring.h \
     MySpringModel.h \
     MyTestTriangle.h \
     MyTypes.h \

@@ -5,21 +5,12 @@
 #include "MyTestTriangle.h"
 #include "MyWorldBounds.h"
 #include "MyBody.h"
+#include "MySpring.h"
 
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 
-struct PhyModelSettings
-{
-    Pos3d  BodyStartPos;
-    double m = 1;
-    double k1 = 1;
-    double k2 = 1;
-    double k3 = 1;
-    double k4 = 1;
-    double k5 = 1;
-    double k6 = 1;
-};
+
 
 struct LightInfo
 {
@@ -34,7 +25,12 @@ class MySpringModel : public IDrawableIn3D, protected QOpenGLFunctions
 private:
 
     MyBody *Body;
-//    MySpring SpringX1;
+    MySpring SpringX1, SpringX2,
+             SpringY1, SpringY2,
+             SpringZ1, SpringZ2;
+
+    std::list<Pos3d> Trace;
+
     MyTestTriangle TestTriangle;
     MyWorldBounds *WorldBounds;
 

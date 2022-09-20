@@ -4,7 +4,7 @@ layout (location = 0) in vec3 VertexPosition;
 layout (location = 1) in vec3 VertexNormal;
 layout (location = 2) in vec3 VertexTex;
 
-layout (location = 0) out vec3 LightIntensity;
+layout (location = 0) /*flat*/ out vec3 LightIntensity;
 
 struct LightInfo
 {

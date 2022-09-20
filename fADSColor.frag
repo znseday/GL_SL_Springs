@@ -1,6 +1,6 @@
 #version 430
 
-layout (location = 0) in vec3 LightIntensity;
+layout (location = 0) /*flat*/ in vec3 LightIntensity;
 
 layout (location = 0) out vec4 FragColor;
 

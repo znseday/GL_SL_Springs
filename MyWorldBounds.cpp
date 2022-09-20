@@ -33,30 +33,6 @@ static constexpr GLfloat WorldVerticesLines[] =
      1.0f,  1.0f, 1.0f
 };
 
-//static constexpr GLfloat WorldVerticesCrossLineLoop1[] =
-//{
-//    -1.0f, -1.0f,  0.0f,
-//    -1.0f,  1.0f,  0.0f,
-//     1.0f,  1.0f,  0.0f,
-//     1.0f, -1.0f,  0.0f
-//};
-
-//static constexpr GLfloat WorldVerticesCrossLineLoop2[] =
-//{
-//    0.0f, -1.0f, -1.0f,
-//    0.0f,  1.0f, -1.0f,
-//    0.0f,  1.0f,  1.0f,
-//    0.0f, -1.0f,  1.0f
-//};
-
-//static constexpr GLfloat WorldVerticesCrossLineLoop3[] =
-//{
-//    -1.0f,  0.0f, -1.0f,
-//     1.0f,  0.0f, -1.0f,
-//     1.0f,  0.0f,  1.0f,
-//    -1.0f,  0.0f,  1.0f
-//};
-
 static constexpr GLfloat WorldVerticesCrossLineLoops[] =
 {
     -1.0f, -1.0f,  0.0f,
@@ -74,6 +50,7 @@ static constexpr GLfloat WorldVerticesCrossLineLoops[] =
      1.0f,  0.0f,  1.0f,
     -1.0f,  0.0f,  1.0f
 };
+//-------------------------------------------------------------
 
 
 MyWorldBounds::MyWorldBounds(QMatrix4x4 &_projMatrix)
@@ -81,10 +58,12 @@ MyWorldBounds::MyWorldBounds(QMatrix4x4 &_projMatrix)
 {
     this->initializeOpenGLFunctions();
 }
+//-------------------------------------------------------------
 
 void MyWorldBounds::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
 {
     program->setUniformValue("mvp_matrix", ProjMatrix * mvMatrix);
+    program->setUniformValue("OneColor", QVector3D(0.5, 0.5, 0.5));
 
     constexpr GLint vPositionAttr = 0;
 
@@ -104,9 +83,10 @@ void MyWorldBounds::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
 //    glDisableVertexAttribArray(vPositionAttr); // Нужно ли?
 
     glVertexAttribPointer(vPositionAttr, 3, GL_FLOAT, GL_FALSE, 0, WorldVerticesCrossLineLoops);
-//    glEnableVertexAttribArray(vPositionAttr);
+//    glEnableVertexAttribArray(vPositionAttr);  // Нужно ли?
     for (int i = 0; i < 3; ++i)
         glDrawArrays(GL_LINE_LOOP, i*4, 4);
 
     glDisableVertexAttribArray(vPositionAttr);  // Нужно ли?
 }
+//-------------------------------------------------------------

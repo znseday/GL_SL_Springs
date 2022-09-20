@@ -21,6 +21,7 @@ static constexpr GLfloat Axiscolors[] =
     0.0f, 0.0f, 1.0f,
     0.0f, 0.0f, 1.0f
 };
+//-------------------------------------------------------------
 
 void MySpringModel::MyDrawAxis()
 {
@@ -38,6 +39,7 @@ void MySpringModel::MyDrawAxis()
     glDisableVertexAttribArray(vColorAttr);
     glDisableVertexAttribArray(vPositionAttr);
 }
+//-------------------------------------------------------------
 
 MySpringModel::MySpringModel()
 {
@@ -46,6 +48,7 @@ MySpringModel::MySpringModel()
     WorldBounds = new MyWorldBounds(ProjMatrix);
     Body = new MyBody(ProjMatrix);
 }
+//-------------------------------------------------------------
 
 MySpringModel::~MySpringModel()
 {
@@ -56,18 +59,48 @@ MySpringModel::~MySpringModel()
 //    ProgramOneColor.release(); // ?
 //    ProgramADSColor.release(); // ?
 }
+//-------------------------------------------------------------
 
 void MySpringModel::InitPhysics(const PhyModelSettings &ms)
 {
+    Body->Set_m(ms.m);
+//    Body->SetPos({0.4, -0.3, 0.5});
+    Body->SetPos(ms.BodyStartPos);
+    Body->Reset_v_a();
 
-    (void)ms;
+    SpringX1.SetFixture({-1,  0,  0});  SpringX1.Set_k(ms.k1);   //SpringX1.SetBasicLen(1.2);
+    SpringX2.SetFixture({ 1,  0,  0});  SpringX2.Set_k(ms.k2);
+    SpringY1.SetFixture({ 0, -1,  0});  SpringY1.Set_k(ms.k3);
+    SpringY2.SetFixture({ 0,  1,  0});  SpringY2.Set_k(ms.k4);
+    SpringZ1.SetFixture({ 0,  0, -1});  SpringZ1.Set_k(ms.k5);
+    SpringZ2.SetFixture({ 0,  0,  1});  SpringZ2.Set_k(ms.k6);
+
+    NextStep(0);
+    Trace.emplace_back(Body->GetPos());
 }
+//-------------------------------------------------------------
 
 void MySpringModel::NextStep(double dt)
 {
+    static int n = 0;
 
-    (void)dt;
+    QVector3D F = SpringX1.CalcF(Body->GetPos()) +
+                  SpringX2.CalcF(Body->GetPos()) +
+                  SpringY1.CalcF(Body->GetPos()) +
+                  SpringY2.CalcF(Body->GetPos()) +
+                  SpringZ1.CalcF(Body->GetPos()) +
+                  SpringZ2.CalcF(Body->GetPos());
+
+    Body->NextStep(dt, F);
+
+    if (++n % 5 == 0)
+    {
+        Trace.emplace_back(Body->GetPos());
+        if (Trace.size() > 500)
+            Trace.pop_front();
+    }
 }
+//-------------------------------------------------------------
 
 void MySpringModel::InitShaders()
 {
@@ -88,7 +121,7 @@ void MySpringModel::InitShaders()
         qCritical() << "ProgramAnyColor.link() Failed!";
         return;
     }
-
+    //------------
 
     if (!ProgramOneColor.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/vOneColor.vert"))
     {
@@ -107,7 +140,7 @@ void MySpringModel::InitShaders()
         qCritical() << "ProgramOneColor.link() Failed!";
         return;
     }
-
+    //-----------
 
     if (!ProgramADSColor.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/vADSColor.vert"))
     {
@@ -127,6 +160,7 @@ void MySpringModel::InitShaders()
         return;
     }
 }
+//-------------------------------------------------------------
 
 void MySpringModel::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
 {   
@@ -141,7 +175,7 @@ void MySpringModel::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
     ProgramAnyColor.setUniformValue("mvp_matrix", ProjMatrix * mvMatrix);
     MyDrawAxis();
     TestTriangle.DrawIn3D(mvMatrix, &ProgramAnyColor);
-
+    //--------------
 
     if (!ProgramOneColor.bind())  // Bind shader pipeline for use
     {
@@ -149,6 +183,7 @@ void MySpringModel::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
         return;
     }
     WorldBounds->DrawIn3D(mvMatrix, &ProgramOneColor);
+    //--------------
 
     if (!ProgramADSColor.bind())  // Bind shader pipeline for use
     {
@@ -156,11 +191,14 @@ void MySpringModel::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
         return;
     }
 
-    ProgramADSColor.setUniformValue("Light.Position", mvMatrix*Light.Position);
+//    ProgramADSColor.setUniformValue("Light.Position", mvMatrix*Light.Position);
+    ProgramADSColor.setUniformValue("Light.Position", Light.Position);
+
     ProgramADSColor.setUniformValue("Light.La", Light.La);
     ProgramADSColor.setUniformValue("Light.Ld", Light.Ld);
     ProgramADSColor.setUniformValue("Light.Ls", Light.Ls);
 
     Body->DrawIn3D(mvMatrix, &ProgramADSColor);
 }
+//-------------------------------------------------------------
 

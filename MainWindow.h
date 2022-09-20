@@ -20,7 +20,6 @@ private:
 
     QBasicTimer TimerMain;
 
-//    MySpringModel *SpringModel;
     MyOpenGLWidget *wgtDrawGL;
 
 public:
@@ -30,6 +29,13 @@ public:
 private slots:
     void on_actionFile_Exit_triggered();
 
+    void on_btnGo_clicked();
 
+    // QObject interface
+protected:
+    void timerEvent(QTimerEvent *event) override;
+
+public slots:
+    void SlotReceiveCurrentFps(int fps);
 };
 #endif // MAINWINDOW_H

@@ -1,38 +1,12 @@
 #include "MyOpenGLWidget.h"
 #include "MySpringModel.h"
+#include "MySpring.h"
 
 #include <QMouseEvent>
 #include <QApplication>
 
 static constexpr float cRot = 0.25f;
 static constexpr float cTrans = 0.0025f;
-
-//void MyOpenGLWidget::InitShaders()
-//{
-//    if (!ProgramBasic.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/Vertex_01.vert"))
-//    {
-//        qCritical() << "addShaderFromSourceFile (Vertex) Failed!";
-//        close();
-//    }
-
-//    if (!ProgramBasic.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/Fragment_01.frag"))
-//    {
-//        qCritical() << "addShaderFromSourceFile (Fragment) Failed!";
-//        close();
-//    }
-
-//    if (!ProgramBasic.link())  // Link shader pipeline
-//    {
-//        qCritical() << "ProgramBasic.link() Failed!";
-//        close();
-//    }
-
-//    if (!ProgramBasic.bind())  // Bind shader pipeline for use
-//    {
-//        qCritical() << "ProgramBasic.bind() Failed!";
-//        close();
-//    }
-//}
 
 void MyOpenGLWidget::PintInfo()
 {
@@ -54,24 +28,41 @@ void MyOpenGLWidget::PintInfo()
 
     qInfo() << "glslVersion (int, int) =" << major << "-" << minor;
 }
+//-------------------------------------------------------------
 
 MyOpenGLWidget::MyOpenGLWidget(/*MySpringModel &_sptingModel,*/ QWidget *parent)
     : QOpenGLWidget(parent)/*, SpringModel(_sptingModel)*/
 {
-
 }
+//-------------------------------------------------------------
 
 MyOpenGLWidget::~MyOpenGLWidget()
 {
     makeCurrent();
     delete SpringModel;
+    MySpring::DestroyBufferVAO();
     doneCurrent();
 }
+//-------------------------------------------------------------
+
+void MyOpenGLWidget::InitPhysics(const PhyModelSettings &ms)
+{
+    SpringModel->InitPhysics(ms);
+}
+//-------------------------------------------------------------
+
+void MyOpenGLWidget::NextStep(double dt)
+{
+    SpringModel->NextStep(dt);
+    this->update();
+}
+//-------------------------------------------------------------
 
 void MyOpenGLWidget::mousePressEvent(QMouseEvent *event)
 {
     OldXY = QVector2D(event->position());
 }
+//-------------------------------------------------------------
 
 void MyOpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
@@ -127,12 +118,14 @@ void MyOpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 
     this->update();     // Request an update
 }
+//-------------------------------------------------------------
 
 void MyOpenGLWidget::wheelEvent(QWheelEvent *event)
 {
     Trans += QVector3D(0, 0, event->angleDelta().y() / 700.0f);
     this->update();
 }
+//-------------------------------------------------------------
 
 void MyOpenGLWidget::initializeGL()
 {
@@ -141,8 +134,13 @@ void MyOpenGLWidget::initializeGL()
     PintInfo();
 
     SpringModel = new MySpringModel;
+
+    MySpring::InitBufferVAO();
+
     RotMatrix.setToIdentity();
     SpringModel->InitShaders();
+
+    SpringModel->InitPhysics(PhyModelSettings());
 
     glClearColor(0, 0, 0, 1);
 
@@ -150,6 +148,7 @@ void MyOpenGLWidget::initializeGL()
 
     glEnable(GL_DEPTH_TEST);
 }
+//-------------------------------------------------------------
 
 void MyOpenGLWidget::resizeGL(int w, int h)
 {
@@ -162,10 +161,22 @@ void MyOpenGLWidget::resizeGL(int w, int h)
 
     SpringModel->InitProjMatrix(ProjMatrix);
 }
+//-------------------------------------------------------------
 
 void MyOpenGLWidget::paintGL()
 {
-    qDebug() << __PRETTY_FUNCTION__ << "FrameNumber =" << FrameNumber++;
+    ++FPS;
+    tEndSecond = ClockType::now();
+
+    double secTime = (double)std::chrono::duration_cast<std::chrono::milliseconds>(tEndSecond - tStartSecond).count();
+    if (secTime >= 1000)
+    {
+        tStartSecond = ClockType::now();
+        emit SignalSendCurrentFps(FPS);
+        FPS = 0;
+    }
+
+//    qDebug() << __PRETTY_FUNCTION__ << "FrameNumber =" << FrameNumber++;
 //    const qreal retinaScale = devicePixelRatio();
 //    qDebug() << "retinaScale =" << retinaScale;
 //    glViewport(0, 0, width() * retinaScale, height() * retinaScale);
@@ -186,3 +197,4 @@ void MyOpenGLWidget::paintGL()
 
     SpringModel->DrawIn3D(matrix, nullptr);
 }
+//-------------------------------------------------------------

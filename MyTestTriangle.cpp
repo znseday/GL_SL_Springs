@@ -15,12 +15,13 @@ static constexpr GLfloat colors[] =
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f
 };
-
+//-------------------------------------------------------------
 
 MyTestTriangle::MyTestTriangle()
 {
     this->initializeOpenGLFunctions();
 }
+//-------------------------------------------------------------
 
 void MyTestTriangle::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *_program)
 {
@@ -42,3 +43,4 @@ void MyTestTriangle::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *_progra
 
     (void)_program;
 }
+//-------------------------------------------------------------

@@ -5,7 +5,7 @@
 #include "MySphere.h"
 
 #include <QOpenGLFunctions>
-#include <QOpenGLVertexArrayObject>
+//#include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 
 struct MaterialInfo
@@ -31,7 +31,8 @@ private:
     MaterialInfo Material;
 
     QOpenGLBuffer BufferVAO;
-    QOpenGLVertexArrayObject VAO;
+    QOpenGLBuffer BufferIndecies;
+//    QOpenGLVertexArrayObject VAO;
 
 public:
     MyBody(QMatrix4x4 &_projMatrix);

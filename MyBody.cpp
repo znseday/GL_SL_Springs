@@ -3,7 +3,7 @@
 #include <QOpenGLShaderProgram>
 
 MyBody::MyBody(QMatrix4x4 &_projMatrix)
-    : MySphere(0.1), ProjMatrix(_projMatrix)
+    : MySphere(1.0, 128, 128), ProjMatrix(_projMatrix), BufferIndecies(QOpenGLBuffer::IndexBuffer)
 {
     this->initializeOpenGLFunctions();
 
@@ -13,20 +13,29 @@ MyBody::MyBody(QMatrix4x4 &_projMatrix)
     BufferVAO.setUsagePattern(QOpenGLBuffer::StaticDraw);
     BufferVAO.allocate(InterleavedVertices.data(), InterleavedVertices.size()*sizeof(float));
 
+    BufferIndecies.create();
+    BufferIndecies.bind();
+    BufferIndecies.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    BufferIndecies.allocate(Indices.data(), Indices.size()*sizeof(unsigned));
+
     // Create Vertex Array Object
-    VAO.create();
-    VAO.bind();
+//    VAO.create();
+//    VAO.bind();
 }
+//-------------------------------------------------------------
 
 MyBody::~MyBody()
 {
     // Release (unbind) all
-    VAO.release();
+//    VAO.release();
     BufferVAO.release();
+    BufferIndecies.release();
 
-    VAO.destroy();
+//    VAO.destroy();
     BufferVAO.destroy();
+    BufferIndecies.destroy();
 }
+//-------------------------------------------------------------
 
 void MyBody::NextStep(double dt, const QVector3D &_F)
 {
@@ -41,10 +50,13 @@ void MyBody::NextStep(double dt, const QVector3D &_F)
 
     CenterPos = CenterPos + V*dt; // Формула из кинематики для равномерного движения
 }
+//-------------------------------------------------------------
 
 void MyBody::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
 {
     mvMatrix.translate(CenterPos);
+    mvMatrix.scale(0.1);
+//    mvMatrix.scale(1.0, 0.2, 1.0);
 
 //    program->setUniformValue("Material", Material);
 
@@ -67,6 +79,7 @@ void MyBody::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
 
     // v v v  n n n  t t
     BufferVAO.bind();
+    BufferIndecies.bind();
 
     program->enableAttributeArray(vPositionAttr);
     program->enableAttributeArray(vNormalAttr);
@@ -77,17 +90,19 @@ void MyBody::DrawIn3D(QMatrix4x4 mvMatrix, QOpenGLShaderProgram *program)
     program->setAttributeBuffer(vNormalAttr, GL_FLOAT, 3*sizeof(float), 3, InterleavedStride);
     program->setAttributeBuffer(vTexAttr, GL_FLOAT, (3+3)*sizeof(float), 2, InterleavedStride);
 
-
-    VAO.bind();
-    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, Indices.data());
-    VAO.release();
+//    VAO.bind();
+//    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, Indices.data());
+    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, nullptr); // using BufferIndecies
+//    VAO.release();
 
     BufferVAO.release();
+    BufferIndecies.release();
 
     program->disableAttributeArray(vPositionAttr);
     program->disableAttributeArray(vNormalAttr);
     program->disableAttributeArray(vTexAttr);
 }
+//-------------------------------------------------------------
 
 
 

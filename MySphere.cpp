@@ -16,6 +16,7 @@ MySphere::MySphere(float _radius, int _sectorCount, int _stackCount)
 
     BuildVerticesSmooth();
 }
+//-------------------------------------------------------------
 
 // x = r * cos(u) * cos(v)
 // y = r * cos(u) * sin(v)
@@ -100,13 +101,12 @@ void MySphere::BuildVerticesSmooth()
     // generate interleaved vertex array as well
     BuildInterleavedVertices();
 }
-
+//-------------------------------------------------------------
 
 void MySphere::BuildInterleavedVertices()
 {
-    size_t i, j;
     size_t count = Vertices.size();
-    for (i = 0, j = 0; i < count; i += 3, j += 2)
+    for (size_t i = 0, j = 0; i < count; i += 3, j += 2)
     {
         InterleavedVertices.push_back(Vertices[i]);
         InterleavedVertices.push_back(Vertices[i+1]);
@@ -120,24 +120,28 @@ void MySphere::BuildInterleavedVertices()
         InterleavedVertices.push_back(TexCoords[j+1]);
     }
 }
-
+//-------------------------------------------------------------
 
 void MySphere::AddVertex(float x, float y, float z)
 {
     Vertices.push_back(x); Vertices.push_back(y); Vertices.push_back(z);
 }
+//-------------------------------------------------------------
 
 void MySphere::AddNormal(float nx, float ny, float nz)
 {
     Normals.push_back(nx); Normals.push_back(ny); Normals.push_back(nz);
 }
+//-------------------------------------------------------------
 
 void MySphere::AddTexCoord(float s, float t)
 {
     TexCoords.push_back(s); TexCoords.push_back(t);
 }
+//-------------------------------------------------------------
 
 void MySphere::AddIndices(unsigned i1, unsigned i2, unsigned i3)
 {
     Indices.push_back(i1); Indices.push_back(i2); Indices.push_back(i3);
 }
+//-------------------------------------------------------------

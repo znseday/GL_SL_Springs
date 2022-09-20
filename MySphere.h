@@ -20,7 +20,6 @@ protected:
     float Radius;
     int SectorCount;
     int StackCount;
-    bool Smooth;
 
     std::vector<float> Vertices;
     std::vector<float> Normals;
