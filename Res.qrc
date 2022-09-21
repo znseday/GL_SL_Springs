@@ -1,10 +1,10 @@
 <RCC>
-    <qresource prefix="/Shaders">
-        <file>fAnyColor.frag</file>
-        <file>vAnyColor.vert</file>
-        <file>fOneColor.frag</file>
-        <file>vOneColor.vert</file>
-        <file>fADSColor.frag</file>
-        <file>vADSColor.vert</file>
+    <qresource prefix="/">
+        <file>Shaders/fADSColor.frag</file>
+        <file>Shaders/fAnyColor.frag</file>
+        <file>Shaders/fOneColor.frag</file>
+        <file>Shaders/vADSColor.vert</file>
+        <file>Shaders/vAnyColor.vert</file>
+        <file>Shaders/vOneColor.vert</file>
     </qresource>
 </RCC>
