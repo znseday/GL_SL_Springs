@@ -6,7 +6,7 @@ In this project, there is modeling (in real time) a ball movement by stretching/
 
 The goal of the project is to study usage basics of using shaders in OpenGL. In the project, naive implementations are used intentionally, without additional optimizations. Also, the project represents different approaches to draw graphics (array pointers, buffer objects, different shader programs, etc.) .
 
-![Screenshot](https://github.com/znseday/GL_SL_Springs/blob/master/Doc/Pics/Pic_01.png)
+![Screenshot](https://github.com/znseday/GL_SL_Springs/blob/master/Doc/Pic_01.png)
 
 In the physic model, there are used Hooke law and Newton's second law. Differential equation of movement are being solved by trivial Eulerian approach. Also, there is a simplification: the springs don’t have constant fixers on the sphere surface, they can “slide” on the sphere surface in order to a line of force vector always passes through the center of the sphere.
 
