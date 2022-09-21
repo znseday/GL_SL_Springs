@@ -2,7 +2,7 @@
 
 Author: Sergey Tsynikin
 
-In this project, there is modeling (in real time) a ball movement by stretching/compression forces of six springs.
+In this project, there is a modeling (in real time) a ball movement by stretching/compression forces of six springs.
 
 The goal of the project is to study usage basics of using shaders in OpenGL. In the project, naive implementations are used intentionally, without additional optimizations. Also, the project represents different approaches to draw graphics (array pointers, buffer objects, different shader programs, etc.) .
 
